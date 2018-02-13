@@ -15,8 +15,53 @@ namespace Decorator
             Video video = new Video("Peter Jackson", "Seigneur des anneaux II", 20, 135);
             video.Display();
 
+            Borrowable borrowable = new Borrowable(video);
+
+            borrowable.Borrow("Elias");
+
+            borrowable.Display();
+
           
         }
+    }
+
+    class Decorator : LibraryItem
+    {
+        
+        LibraryItem Item;
+        public Decorator(LibraryItem item)
+        {
+            Item = item;
+        }
+        public override void Display()
+        {
+            Item.Display();
+        }
+    }
+
+    class Borrowable : Decorator
+    {
+        LibraryItem Item;
+        List<string> borrowers = new List<string>();
+
+        public Borrowable(LibraryItem item) : base(item)
+        {
+            Item = item;  
+        }
+
+        public void Borrow(string borrower)
+        {
+            borrowers.Add(borrower);
+            Item.NumCopies--;
+        }
+        public override void Display(){
+
+            base.Display();
+            foreach (string item in borrowers)
+            {
+                Console.WriteLine("borrower :"+ item);
+            }
+        } 
     }
     abstract class LibraryItem
     {
