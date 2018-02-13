@@ -6,42 +6,39 @@ namespace Adapter
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Sans adapter !");
+            Console.WriteLine("Avec adapter FR !");
 
-            string typeReader = "UK";
-
-            ReaderService rs = new ReaderService(typeReader);
+            LecteurMediaFrancais lecteurFR = new LecteurMediaFrancais();
+            AdapterMediaFrancais adapterFR = new AdapterMediaFrancais(lecteurFR);
+            ReaderService rs = new ReaderService(adapterFR);
             rs.play();
         }
     }
 
     public class ReaderService
     {
-        public string TypeReader { get; set; }
+        public IGenericReader genericReader;
         
-        public ReaderService(string typeReader)
+        public ReaderService(IGenericReader genericReader)
         {
-            TypeReader = typeReader;
+            this.genericReader = genericReader;
         }
         public void play()
         {
-            switch (TypeReader.ToUpper())
-            {
-                case "UK":
-                    MediaReaderUk ukMedia = new MediaReaderUk();
-                    ukMedia.Start();
-                    break;
-                case "US":
-                    MediaReaderUs usMedia = new MediaReaderUs();
-                    usMedia.Read();
-                    break;
-                case "FR":
-                    LecteurMediaFrancais frMedia = new LecteurMediaFrancais();
-                    frMedia.Demarrer();
-                    break;
-                default:
-                    return;
-            }
+            genericReader.Play();
+        }
+    }
+
+    public class AdapterMediaFrancais : IGenericReader 
+    {
+        LecteurMediaFrancais lecteurFR;
+        public AdapterMediaFrancais(LecteurMediaFrancais lecteurFR)
+        {
+            this.lecteurFR = lecteurFR;
+        }
+        public void Play()
+        {
+            lecteurFR.Demarrer();
         }
     }
 
@@ -58,6 +55,10 @@ namespace Adapter
     public interface IMediaReaderUs
     {
          void Read();
+    }
+    
+    public interface IGenericReader{
+        void Play();
     }
 
     public class LecteurMediaFrancais : ILecteurMediaFrancais
