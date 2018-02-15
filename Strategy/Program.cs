@@ -6,31 +6,42 @@ namespace Strategy
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Pas de strategy :( !");
+            Console.WriteLine("Strategy :) !");
 
-            bool isHttps = false;
+            bool isHttps = true;
 
             Client c = new Client();
             
             if (isHttps)
-                c.ProcessHttpsRequest();
+                c.ProcessClientRequest(new ProcessHttpsRequest());
             else
-                c.ProcessHttpRequest();
+                c.ProcessClientRequest(new ProcessHttpRequest());
         }
     }
 }
+public interface IProcess{
 
+    void Process();
+}
+class ProcessHttpRequest: IProcess{
+    
+    public void Process(){
+        Console.WriteLine("Traitement pas Securisé...");
+        
+    }
+}
+class ProcessHttpsRequest:IProcess{
+
+    public void Process(){
+        Console.WriteLine("Traitement Securisé...");
+        
+    }
+}
 class Client 
 {
 
-
-    public void ProcessHttpsRequest()
+    public void ProcessClientRequest(IProcess iprocess)
     {
-        Console.WriteLine("TraitementSecurisé...");
-    }
-
-    public void ProcessHttpRequest()
-    {
-        Console.WriteLine("Traitement pas Securisé...");
+        iprocess.Process();
     }
 }
